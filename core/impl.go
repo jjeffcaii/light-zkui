@@ -1,19 +1,20 @@
 package core
 
 import (
-	"time"
-	"github.com/samuel/go-zookeeper/zk"
-	"fmt"
 	"encoding/base64"
-	"regexp"
 	"errors"
+	"fmt"
 	"log"
+	"regexp"
 	"strings"
+	"time"
+
+	"github.com/samuel/go-zookeeper/zk"
 )
 
-var PATTERN_ZKURL = regexp.MustCompile("^([a-zA-Z0-9._-]+(:[1-9][0-9]+)?)(,[a-zA-Z0-9._-]+(:[1-9][0-9]+)?)*(/\\w+)?$")
-var PATTERN_FORMAT = regexp.MustCompile("//+")
-var PATH_SPLIT = "/"
+var patternZkUrl = regexp.MustCompile("^([a-zA-Z0-9._-]+(:[1-9][0-9]+)?)(,[a-zA-Z0-9._-]+(:[1-9][0-9]+)?)*(/\\w+)?$")
+var patternFormat = regexp.MustCompile("//+")
+var pathSplit = "/"
 
 type zkService struct {
 	conn *zk.Conn
@@ -21,8 +22,8 @@ type zkService struct {
 }
 
 func (p *zkService) getFullPath(path string) string {
-	s := PATTERN_FORMAT.ReplaceAllString(fmt.Sprintf("/%s/%s", p.root, path), PATH_SPLIT)
-	return strings.TrimRight(s, PATH_SPLIT)
+	s := patternFormat.ReplaceAllString(fmt.Sprintf("/%s/%s", p.root, path), pathSplit)
+	return strings.TrimRight(s, pathSplit)
 }
 
 func (p *zkService) List(name string) ([]string, error) {
@@ -44,19 +45,19 @@ func (p *zkService) Get(name string) (*Node, error) {
 		return nil, err
 	}
 }
-func (p *zkService) Create(name string, data []byte) (error) {
+func (p *zkService) Create(name string, data []byte) error {
 	path := p.getFullPath(name)
 	_, err := p.conn.Create(path, data, 0, zk.WorldACL(zk.PermAll))
 	return err
 }
 
-func (p *zkService) Update(name string, data []byte) (error) {
+func (p *zkService) Update(name string, data []byte) error {
 	path := p.getFullPath(name)
 	_, err := p.conn.Set(path, data, -1)
 	return err
 }
 
-func (p *zkService) Del(name string) (error) {
+func (p *zkService) Del(name string) error {
 	path := p.getFullPath(name)
 	return p.conn.Delete(path, -1)
 }
@@ -71,13 +72,13 @@ func (p *zkService) Exists(name string) (bool, error) {
 }
 
 func NewZkService(zkurl string) (ZkService, error) {
-	if !PATTERN_ZKURL.MatchString(zkurl) {
+	if !patternZkUrl.MatchString(zkurl) {
 		return nil, errors.New(fmt.Sprintf("invalid zkurl %s", zkurl))
 	}
 	var seeds []string
 	var root string
 	if i := strings.LastIndex(zkurl, "/"); i < 0 {
-		root = PATH_SPLIT
+		root = pathSplit
 		seeds = strings.SplitN(zkurl, ",", -1)
 	} else {
 		root = zkurl[i:]

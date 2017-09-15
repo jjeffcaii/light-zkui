@@ -1,16 +1,17 @@
 package main
 
 import (
+	"encoding/base64"
+	"encoding/json"
+	"errors"
+	"flag"
+	"fmt"
+	"io/ioutil"
+	"light-zkui/core"
+	"os"
+
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"flag"
-	"light-zkui/core"
-	"io/ioutil"
-	"encoding/json"
-	"encoding/base64"
-	"errors"
-	"fmt"
-	"os"
 )
 
 const (

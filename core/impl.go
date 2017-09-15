@@ -12,7 +12,7 @@ import (
 	"github.com/samuel/go-zookeeper/zk"
 )
 
-var patternZkUrl = regexp.MustCompile("^([a-zA-Z0-9._-]+(:[1-9][0-9]+)?)(,[a-zA-Z0-9._-]+(:[1-9][0-9]+)?)*(/\\w+)?$")
+var patternZkUrl = regexp.MustCompile("^([a-zA-Z0-9._\\-]+(:[1-9][0-9]+)?)(,[a-zA-Z0-9._\\-]+(:[1-9][0-9]+)?)*(/.+)?$")
 var patternFormat = regexp.MustCompile("//+")
 var pathSplit = "/"
 
@@ -77,7 +77,7 @@ func NewZkService(zkurl string) (ZkService, error) {
 	}
 	var seeds []string
 	var root string
-	if i := strings.LastIndex(zkurl, "/"); i < 0 {
+	if i := strings.Index(zkurl, "/"); i < 0 {
 		root = pathSplit
 		seeds = strings.SplitN(zkurl, ",", -1)
 	} else {

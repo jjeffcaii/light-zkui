@@ -1,3 +1,21 @@
-<p>
-  stats works!
-</p>
+<app-sidebar [choose]="0"></app-sidebar>
+<div class="container-fluid" style="margin: 10px 10px 10px 310px;">
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Value</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let it of stats">
+          <td>{{it.key}}</td>
+          <td>{{it.value}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

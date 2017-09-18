@@ -9,12 +9,17 @@ import (
 	"strings"
 	"time"
 
+	"net"
+
+	"bufio"
+
 	"github.com/samuel/go-zookeeper/zk"
 )
 
 var patternZkUrl = regexp.MustCompile("^([a-zA-Z0-9._\\-]+(:[1-9][0-9]+)?)(,[a-zA-Z0-9._\\-]+(:[1-9][0-9]+)?)*(/.+)?$")
 var patternFormat = regexp.MustCompile("//+")
 var pathSplit = "/"
+var patternStat = regexp.MustCompile("^([a-zA-Z0-9_]+)\\s+(.+)$")
 
 type zkService struct {
 	conn *zk.Conn
@@ -68,6 +73,30 @@ func (p *zkService) Exists(name string) (bool, error) {
 		return has, nil
 	} else {
 		return false, err
+	}
+}
+
+func (p *zkService) Stats() (ZkStats, error) {
+	c, err := net.Dial("tcp", p.conn.Server())
+	defer c.Close()
+	if err != nil {
+		return nil, err
+	} else if _, err := c.Write([]byte("mntr")); err != nil {
+		return nil, err
+	} else {
+		red := bufio.NewReader(c)
+		m := make(map[string]string, 0)
+		for {
+			if bs, _, err := red.ReadLine(); err == nil {
+				match := patternStat.FindSubmatch(bs)
+				if len(match) > 2 {
+					m[string(match[1])] = string(match[2])
+				}
+			} else {
+				break
+			}
+		}
+		return m, nil
 	}
 }
 

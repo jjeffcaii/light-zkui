@@ -15,8 +15,9 @@ import (
 )
 
 const (
-	DATA_TYPE_STRING int8 = 0
-	DATA_TYPE_BINARY int8 = 1
+	DATA_TYPE_STRING int8   = 0
+	DATA_TYPE_BINARY int8   = 1
+	API_VERSION      string = "v1"
 )
 
 type ErrResp struct {
@@ -54,15 +55,24 @@ func main() {
 	app.Use(middleware.CORS())
 	app.Static("/pages", "")
 
-	app.GET("/v1/*", func(c echo.Context) error {
+	app.GET(fmt.Sprintf("/%s/stats", API_VERSION), func(c echo.Context) error {
+		if stats, err := zk.Stats(); err == nil {
+			return c.JSON(200, stats)
+		} else {
+			return sendError(c, 500, err)
+		}
+	})
+
+	app.GET(fmt.Sprintf("/%s/nodes/*", API_VERSION), func(c echo.Context) error {
 		p := c.Param("*")
-		if c.QueryString() == "!" {
+		switch c.QueryParam("ls") {
+		case "true", "1", "yes":
 			if node, err := zk.List("/" + p); err != nil {
 				return sendError(c, 500, err)
 			} else {
 				return c.JSON(200, node)
 			}
-		} else {
+		default:
 			if node, err := zk.Get("/" + p); err != nil {
 				return sendError(c, 500, err)
 			} else {
@@ -71,15 +81,15 @@ func main() {
 		}
 	})
 
-	app.POST("/v1/*", func(c echo.Context) error {
+	app.POST(fmt.Sprintf("/%s/nodes/*", API_VERSION), func(c echo.Context) error {
 		return handleWriteNode(c, 201, zk.Create)
 	})
 
-	app.PUT("/v1/*", func(c echo.Context) error {
+	app.PUT(fmt.Sprintf("/%s/nodes/*", API_VERSION), func(c echo.Context) error {
 		return handleWriteNode(c, 200, zk.Update)
 	})
 
-	app.DELETE("/v1/*", func(c echo.Context) error {
+	app.DELETE(fmt.Sprintf("/%s/nodes/*", API_VERSION), func(c echo.Context) error {
 		p := c.Param("*")
 		if err := zk.Del(p); err != nil {
 			exists, err2 := zk.Exists(p)

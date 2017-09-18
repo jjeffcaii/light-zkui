@@ -28,7 +28,11 @@ type zkService struct {
 
 func (p *zkService) getFullPath(path string) string {
 	s := patternFormat.ReplaceAllString(fmt.Sprintf("/%s/%s", p.root, path), pathSplit)
-	return strings.TrimRight(s, pathSplit)
+	if s == pathSplit {
+		return s
+	} else {
+		return strings.TrimRight(s, pathSplit)
+	}
 }
 
 func (p *zkService) List(name string) ([]string, error) {
@@ -94,6 +98,30 @@ func (p *zkService) Stats() (ZkStats, error) {
 				}
 			} else {
 				break
+			}
+		}
+		return m, nil
+	}
+}
+
+func (p *zkService) GetConf() (ZkConf, error) {
+	c, err := net.Dial("tcp", p.conn.Server())
+	defer c.Close()
+	if err != nil {
+		return nil, err
+	} else if _, err := c.Write([]byte("conf")); err != nil {
+		return nil, err
+	} else {
+		red := bufio.NewReader(c)
+		m := make(map[string]string, 0)
+		for {
+			bs, _, err := red.ReadLine()
+			if err != nil {
+				break
+			}
+			sp := strings.SplitN(string(bs), "=", 2)
+			if len(sp) == 2 {
+				m[sp[0]] = sp[1]
 			}
 		}
 		return m, nil

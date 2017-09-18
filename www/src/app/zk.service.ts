@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {Http} from "@angular/http";
 import {Observable} from "rxjs/Observable";
 import "rxjs/add/operator/map";
-import "rxjs/add/operator/do";
-import * as _ from "lodash";
+
+type Record = { [key: string]: any }
 
 @Injectable()
 export class ZkService {
@@ -13,26 +13,16 @@ export class ZkService {
   constructor(private _http: Http) {
   }
 
-  getStats(): Observable<any> {
-    return this._http.get(`${this.endpoint}/stats`)
-      .map(res => {
-        const data = <{ [key: string]: string }>res.json();
-        const ret: { key: string, value: string }[] = [];
-        _.each(data, (v, k) => {
-          ret.push({
-            key: k,
-            value: v,
-          });
-        });
-        return ret;
-      })
-      .do(data => console.log("stats: %s", JSON.stringify(data)))
+  getConf(): Observable<Record> {
+    return this._http.get(`${this.endpoint}/sys/conf`).map(res => <Record>res.json())
+  }
+
+  getStats(): Observable<Record> {
+    return this._http.get(`${this.endpoint}/sys/stats`).map(res => <Record>res.json())
   }
 
   getNodeNames(path: string): Observable<string[]> {
-    return this._http.get(`${this.endpoint}/nodes/${path || ""}?ls=1`)
-      .map((res) => <string[]>res.json())
-      .do(data => console.log("list nodes for path %s: %s", (path || "/"), JSON.stringify(data)));
+    return this._http.get(`${this.endpoint}/nodes/${path || ""}?ls=1`).map((res) => <string[]>res.json())
   }
 
 

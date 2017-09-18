@@ -55,7 +55,15 @@ func main() {
 	app.Use(middleware.CORS())
 	app.Static("/pages", "")
 
-	app.GET(fmt.Sprintf("/%s/stats", API_VERSION), func(c echo.Context) error {
+	app.GET(fmt.Sprintf("/%s/sys/conf", API_VERSION), func(c echo.Context) error {
+		if conf, err := zk.GetConf(); err == nil {
+			return c.JSON(200, conf)
+		} else {
+			return sendError(c, 500, err)
+		}
+	})
+
+	app.GET(fmt.Sprintf("/%s/sys/stats", API_VERSION), func(c echo.Context) error {
 		if stats, err := zk.Stats(); err == nil {
 			return c.JSON(200, stats)
 		} else {

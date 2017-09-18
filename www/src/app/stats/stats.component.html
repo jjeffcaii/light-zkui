@@ -1,21 +1,32 @@
-<app-sidebar [choose]="0"></app-sidebar>
-<div class="container-fluid" style="margin: 10px 10px 10px 310px;">
-  <div class="row">
-    <div class="col-md-12">
-      <table class="table">
-        <thead>
-        <tr>
-          <th>Name</th>
-          <th>Value</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let it of stats">
-          <td>{{it.key}}</td>
-          <td>{{it.value}}</td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
+<h1>Cluster Stats</h1>
+<hr>
+<!--<div class="row">
+  <div class="col-md-12" style="text-align: right;">
+    <a class="btn btn-primary btn-sm" href="javascript:" (click)="getStats()" role="button">
+      <i class="fa fa-refresh"></i> Refresh
+    </a>
+  </div>
+</div>-->
+<div class="row">
+  <div class="col-md-12">
+    <tabset>
+      <tab (select)="getStats()" heading="Stats"></tab>
+      <tab (select)="getConf()" heading="Config"></tab>
+    </tabset>
+    <table class="table table-hover table-striped">
+      <thead>
+      <tr>
+        <th width="300px;">Property</th>
+        <th>Value</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let it of data">
+        <td>{{it.key}}</td>
+        <td>{{it.value}}</td>
+      </tr>
+      </tbody>
+    </table>
   </div>
 </div>
+<hr>

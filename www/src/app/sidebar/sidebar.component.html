@@ -5,22 +5,22 @@
 
   <div class="menu-list">
     <ul id="menu-content" class="menu-content collapse out">
-      <li [ngClass]="{'active': choose===0}">
+      <li routerLinkActive="active">
         <a [routerLink]="['/stats']">
           <i class="fa fa-dashboard fa-lg"></i> Stats
         </a>
       </li>
-      <li [ngClass]="{'active': choose===1}">
+      <li routerLinkActive="active">
         <a [routerLink]="['/znodes']">
-          <i class="fa fa-database fa-lg"></i> ZNodes
+          <i class="fa fa-folder fa-lg"></i> Browse
         </a>
       </li>
-      <li [ngClass]="{'active': choose===2}">
+      <li routerLinkActive="active">
         <a [routerLink]="['/profile']">
           <i class="fa fa-cog fa-lg"></i> Settings
         </a>
       </li>
-      <li [ngClass]="{'active': choose===3}">
+      <li routerLinkActive="active">
         <a [routerLink]="['/about']">
           <i class="fa fa-info-circle fa-lg"></i> About
         </a>

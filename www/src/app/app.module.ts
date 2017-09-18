@@ -9,6 +9,7 @@ import {RouterModule, Routes} from "@angular/router";
 import {ZnodesComponent} from './znodes/znodes.component';
 import {ProfileComponent} from './profile/profile.component';
 import {AboutComponent} from './about/about.component';
+import {TabsModule} from "ngx-bootstrap";
 
 const router: Routes = [
   {path: "stats", component: StatsComponent},
@@ -30,6 +31,7 @@ const router: Routes = [
     BrowserModule,
     HttpModule,
     RouterModule.forRoot(router),
+    TabsModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],

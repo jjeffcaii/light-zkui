@@ -1,10 +1,38 @@
-<app-sidebar [choose]="1"></app-sidebar>
-<div class="container-fluid" style="margin: 10px 10px 10px 310px;">
-  <div class="row">
-    <div class="col-md-12">
-      <p>
-        znodes works!
-      </p>
-    </div>
+<h2>Data Browser</h2>
+<hr>
+<div class="row">
+  <div class="col-md-12">
+    <ol class="breadcrumb">
+      <li><a (click)="jump(-1)" role="button">ROOT</a></li>
+      <li *ngFor="let it of paths;let i=index;"><a (click)="jump(i)" role="button">{{it}}</a></li>
+    </ol>
   </div>
 </div>
+<div class="row">
+  <div class="col-md-12">
+    <table class="table">
+      <thead>
+      <tr>
+        <th width="45px;">#</th>
+        <th>Name</th>
+        <th>Operation</th>
+      </tr>
+      </thead>
+      <tr *ngIf="paths.length>0">
+        <td></td>
+        <td>
+          <a (click)="jump(paths.length-2)" role="button">
+            &nbsp;&nbsp;<i class="fa fa-level-up" aria-hidden="true"></i>&nbsp;&nbsp;
+          </a>
+        </td>
+        <td></td>
+      </tr>
+      <tr *ngFor="let it of nodes;let i = index;">
+        <td>{{i+1}}</td>
+        <td><a (click)="open(it)" role="button">{{it}}</a></td>
+        <td></td>
+      </tr>
+    </table>
+  </div>
+</div>
+<hr>

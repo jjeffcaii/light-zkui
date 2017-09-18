@@ -6,6 +6,7 @@ type Node struct {
 }
 
 type ZkStats = map[string]string
+type ZkConf = map[string]string
 
 type ZkService interface {
 	List(name string) ([]string, error)
@@ -15,4 +16,5 @@ type ZkService interface {
 	Del(name string) error
 	Exists(name string) (bool, error)
 	Stats() (ZkStats, error)
+	GetConf() (ZkConf, error)
 }

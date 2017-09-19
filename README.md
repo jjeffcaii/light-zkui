@@ -1,2 +1,2 @@
-# Light Zookeeper UI
-![logo](./logo.png "logo.png")
+# ![logo32](./logo32.png "logo32.png")Light Zookeeper UI
+

@@ -1,5 +1,7 @@
 <h2>Data Browser</h2>
 <hr>
+
+
 <div class="row">
   <div class="col-md-12">
     <ol class="breadcrumb">
@@ -8,31 +10,65 @@
     </ol>
   </div>
 </div>
+
 <div class="row">
-  <div class="col-md-12">
-    <table class="table">
-      <thead>
-      <tr>
-        <th width="45px;">#</th>
-        <th>Name</th>
-        <th>Operation</th>
-      </tr>
-      </thead>
-      <tr *ngIf="paths.length>0">
-        <td></td>
-        <td>
-          <a (click)="jump(paths.length-2)" role="button">
-            &nbsp;&nbsp;<i class="fa fa-level-up" aria-hidden="true"></i>&nbsp;&nbsp;
-          </a>
-        </td>
-        <td></td>
-      </tr>
-      <tr *ngFor="let it of nodes;let i = index;">
-        <td>{{i+1}}</td>
-        <td><a (click)="open(it)" role="button">{{it}}</a></td>
-        <td></td>
-      </tr>
-    </table>
+  <div style="padding-bottom: 32px;" class="col-md-12 pb-filemng-template-body">
+    <div class="col-xs-4 col-sm-4 col-md-2 pb-filemng-body-folders" *ngIf="paths.length > 0">
+      <img class="img-responsive" src="../../assets/images/folder64.png" (click)="jump(paths.length-2)" role="button">
+      <br>
+      <p class="pb-filemng-paragraphs">..</p>
+    </div>
+    <!--dblclick)="view(it,template)"-->
+    <div style="padding-bottom: 32px;" class="col-xs-4 col-sm-4 col-md-2 pb-filemng-body-folders"
+         *ngFor="let it of nodes;">
+      <img
+        class="img-responsive"
+        src="../../assets/images/folder64.png"
+        [contextMenu]="basicMenu"
+        [contextMenuSubject]="it"
+        (click)="open(it)"
+        role="button">
+      <br>
+      <p style="word-wrap: break-word;word-break: normal; overflow: hidden;" class="pb-filemng-paragraphs">{{it}}</p>
+    </div>
   </div>
 </div>
 <hr>
+
+<div class="row">
+  <div class="col-md-6">
+    <a class="btn btn-sm btn-primary" (click)="create()" role="button">
+      <i class="fa fa-plus-circle" aria-hidden="true"></i> Create
+    </a>
+  </div>
+  <div style="text-align: right" class="col-md-6">
+    <p class="text text-muted">totals: {{nodes.length}}</p>
+  </div>
+</div>
+
+<div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">{{detail?detail.path:''}}</h4>
+        <button type="button" class="close pull-right" (click)="lgModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-znode-editor [znode]="detail"></app-znode-editor>
+      </div>
+    </div>
+  </div>
+</div>
+
+<context-menu>
+  <ng-template contextMenuItem let-item (execute)="view($event.item,lgModal)">
+    <i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Properties
+  </ng-template>
+  <ng-template contextMenuItem divider="true"></ng-template>
+  <ng-template contextMenuItem let-item (execute)="remove($event.item)">
+    <i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Delete
+  </ng-template>
+</context-menu>

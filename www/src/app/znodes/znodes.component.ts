@@ -1,6 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {ZkService} from "../zk.service";
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {ZkService, ZNode} from "../zk.service";
 import * as _ from "lodash";
+import {ContextMenuComponent} from "ngx-contextmenu";
 
 @Component({
   selector: 'app-znodes',
@@ -10,9 +11,11 @@ import * as _ from "lodash";
 })
 
 export class ZnodesComponent implements OnInit {
+  @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
 
-  paths: string[] = ["armyant", "tasks"];
-  nodes: string[] = [];
+  public paths: string[] = [];
+  public nodes: string[] = [];
+  public detail: ZNode;
 
   constructor(private _zk: ZkService) {
   }
@@ -25,9 +28,38 @@ export class ZnodesComponent implements OnInit {
     }
   }
 
-  open(name: string) {
+  ngOnInit() {
+    this.getNodeNames();
+  }
+
+  create(): void {
+
+
+  }
+
+  open(name: string): void {
     this.paths.push(name);
     this.getNodeNames();
+  }
+
+  remove(name: string) {
+    const current = this.pwd();
+    const foo = current === "/" ? `${current}${name}` : `${current}/${name}`;
+    const yes = confirm(`Are you sure to delete '${foo}'?`);
+    if (yes) {
+      console.log("--------> %s", foo);
+    }
+  }
+
+  view(name: string, lgModal: any): void {
+    const p = `${this.pwd()}/${name}`;
+    this._zk.getNode(p).subscribe(data => {
+      this.detail = data;
+      lgModal.show();
+      console.debug("node data: %s", JSON.stringify(data));
+    }, err => {
+      console.error("get node data failed:", err);
+    });
   }
 
   jump(index: number): void {
@@ -39,9 +71,6 @@ export class ZnodesComponent implements OnInit {
     this.getNodeNames();
   }
 
-  ngOnInit() {
-    this.getNodeNames();
-  }
 
   getNodeNames(): void {
     this._zk.getNodeNames(this.pwd()).subscribe(names => this.nodes = names);

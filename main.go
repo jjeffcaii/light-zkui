@@ -43,6 +43,7 @@ func (p *PostNode) extract() ([]byte, error) {
 func main() {
 	zkurl := flag.String("zk", "", "zookeeper url. (eg: zk-1:2181,zk-2:2181,zk-3:2181/test)")
 	listen := flag.String("listen", ":8080", "listen address. (default: 0.0.0.0:8080)")
+	www := flag.String("www", "", "html folder.")
 	flag.Parse()
 	zk, err := core.NewZkService(*zkurl)
 	if err != nil {
@@ -53,7 +54,10 @@ func main() {
 	app := echo.New()
 	app.Use(middleware.Recover())
 	app.Use(middleware.CORS())
-	app.Static("/pages", "")
+
+	if len(*www) > 0 {
+		app.Static("/", *www)
+	}
 
 	app.GET(fmt.Sprintf("/%s/sys/conf", API_VERSION), func(c echo.Context) error {
 		if conf, err := zk.GetConf(); err == nil {

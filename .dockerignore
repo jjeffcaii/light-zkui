@@ -17,4 +17,8 @@
 Gopkg.lock
 bin/
 Dockerfile
+Makefile
 logo.png
+
+www/.idea
+www/node_modules

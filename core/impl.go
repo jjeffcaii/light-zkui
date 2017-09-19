@@ -1,17 +1,15 @@
 package core
 
 import (
+	"bufio"
 	"encoding/base64"
 	"errors"
 	"fmt"
 	"log"
+	"net"
 	"regexp"
 	"strings"
 	"time"
-
-	"net"
-
-	"bufio"
 
 	"github.com/samuel/go-zookeeper/zk"
 )

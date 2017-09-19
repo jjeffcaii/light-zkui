@@ -1,13 +1,27 @@
-FROM golang:alpine AS builder
+FROM golang:1.9-alpine AS backend
 RUN apk add --no-cache git && go get -u github.com/golang/dep/cmd/dep
 WORKDIR /go/src/light-zkui
 COPY . .
 RUN dep ensure && mkdir bin && go build -o bin/light-zkui
 
+FROM node:6-alpine AS frontend
+RUN npm set registry https://registry.npm.taobao.org && npm set disturl https://npm.taobao.org/dist
+RUN npm i -g @angular/cli
+WORKDIR /app
+COPY www/package.json ./package.json
+COPY www/yarn.lock ./yarn.lock
+RUN yarn
+COPY www .
+RUN ng build --env=prod
+
 FROM alpine:3.5
 LABEL maintainer=jjeffcaii@outlook.com
-COPY --from=builder /go/src/light-zkui/bin/light-zkui /usr/local/bin
 
-EXPOSE 8080
+ENV ZK_URL="" PORT=8080
 
-ENTRYPOINT ["light-zkui"]
+COPY --from=backend /go/src/light-zkui/bin/light-zkui /usr/local/bin
+COPY --from=frontend /app/dist /root/.light-zkui/www
+
+EXPOSE $PORT
+
+CMD light-zkui -www=/root/.light-zkui/www -listen=:$PORT -zk=$ZK_URL

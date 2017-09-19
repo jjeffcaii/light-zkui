@@ -1,0 +1,88 @@
+/* source: http://www.prepbootstrap.com/bootstrap-template/file-manager */
+
+.pb-filemng-template {
+  margin-top: 40px;
+  font-family: 'Sansita', sans-serif;
+}
+
+.pb-filemng-navbar {
+  margin-bottom: 0;
+}
+
+.treeview-toggle-btn {
+  margin-left: 15px;
+}
+
+.pb-filemng-template-btn {
+  background: transparent no-repeat;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  color: gray;
+  padding: 0 13px 0 13px;
+}
+
+.pb-filemng-active {
+  border-bottom: 2px solid #6d97db;
+  color: #5f6977;
+}
+
+.pb-filemng-template-btn:hover {
+  color: blue;
+}
+
+.pb-filemng-body-folders > img {
+  padding: 16px;
+}
+
+.pb-filemng-body-folders > img:hover {
+  border-radius: 16px;
+  background-color: #eeeeee;
+  cursor: pointer;
+}
+
+.btn-align {
+  margin-top: 7px;
+}
+
+.pb-filemng-template-treeview {
+  border-right: 1px solid gray;
+}
+
+.pb-filemng-folder {
+  color: orange;
+  padding-bottom: 3px;
+}
+
+.pb-filemng-paragraphs {
+  margin-top: -20px;
+  text-align: center;
+}
+
+.img-responsive {
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 767px) {
+
+  .pb-filemng-template-treeview {
+    border-right: none;
+  }
+
+  #options {
+    text-align: center;
+  }
+
+  #options > li {
+    display: inline-block;
+  }
+
+  #pb-filemng-navigation > ul {
+    text-align: center;
+  }
+
+  #pb-filemng-navigation > ul > li {
+    display: inline-block;
+  }
+
+}

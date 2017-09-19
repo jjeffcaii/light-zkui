@@ -20,5 +20,6 @@ Dockerfile
 Makefile
 logo.png
 
+doc
 www/.idea
 www/node_modules

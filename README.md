@@ -1,2 +1,22 @@
-# Light Zookeeper UI
-![stars](https://img.shields.io/github/stars/jjeffcaii/light-zkui.svg "stars") ![forks](https://img.shields.io/github/forks/jjeffcaii/light-zkui.svg "forks")
+# Light Zookeeper UI (WARNING: Still in developing!!!)
+
+## Screenshot
+
+![screenshot1](./doc/images/screenshot-1.png "screenshot1")
+
+![screenshot2](./doc/images/screenshot-2.png "screenshot2")
+
+
+## Docker
+
+### Build Image
+
+``` shell
+$ make img=YOUR_IMAGE_NAME
+```
+
+### Run
+
+``` shell
+$ docker run -p 8080:8080 -e "ZK_URL=your-zk-1,your-zk-2,your-zk-3" YOUR_DOCKER_IMAGE
+```

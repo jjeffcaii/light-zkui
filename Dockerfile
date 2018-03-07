@@ -6,7 +6,6 @@ RUN dep ensure
 RUN go build -o /tmp/zkui
 
 FROM node:6-alpine AS frontend
-RUN npm set registry https://registry.npm.taobao.org && npm set disturl https://npm.taobao.org/dist
 RUN npm i -g @angular/cli
 WORKDIR /app
 COPY www/package.json ./package.json
